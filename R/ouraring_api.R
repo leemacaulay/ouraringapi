@@ -51,25 +51,24 @@ ouraring_api <- function(path = "userinfo", start = NULL, end = NULL, verbose = 
     )
   }
 
-  ifelse(isTRUE(verbose),
-         result <- structure(
-           list(
-             content = parsed[[path]],
-             path = path,
-             response = resp
-           ),
-           class = "ouraring_api"
-         ),
-         structure(
-           result <- parsed[[path]],
-           class = "ouraring_api"
-         )
-  )
-return(result)
-}
+  if (isTRUE(verbose) && path == "userinfo") {
+    result <- list(
+        content = parsed,
+        path = path,
+        response = resp
+      )
+  } else if ( path == "userinfo" ) {
+    result <- parsed
+  } else if ( isTRUE(verbose) ) {
+    result <- list(
+        content = parsed[[path]],
+        path = path,
+        response = resp
+      )
+  } else {
+    result <- parsed[[path]]
+  }
 
-print.ouraring_api <- function(x, ...) {
-  cat("<Oura Ring ", x$path, ">\n", sep = "")
-  utils::str(x$content)
-  invisible(x)
+return(result)
+
 }
