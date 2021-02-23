@@ -17,19 +17,18 @@ ouraring_pat <- function() {
 #' @param path method to get data from (\code{"sleep"}, \code{"activity"}, \code{"readiness"} or leave blank for userinfo).
 #' @param start (optional) first date to retrieve data. If not given, it will be set to one week ago.
 #' @param end (optional) last date to retrieve data (inclusive). If not given, it will be set to the current date.
+#' @param verbose (defaults to FALSE) return HTTP response as well as data in a list.
 #'
 #' @return A data.frame of sleep, activity, readiness or userinfo data.
 #'
 #' @examples
 #' ouraring_api()
-#'
 #' ouraring_api("sleep")
-#'
 #' ouraring_api("activity", start="2021-02-19", end="2021-02-21")
 #'
 #' @export
 #'
-ouraring_api <- function(path = "userinfo", start = NULL, end = NULL) {
+ouraring_api <- function(path = "userinfo", start = NULL, end = NULL, verbose = FALSE) {
   url <- httr::modify_url("https://api.ouraring.com/v1/", path = c("v1", path))
   resp <- httr::GET(url, query = list(access_token = ouraring_pat(),
                                 start = start,
@@ -52,14 +51,21 @@ ouraring_api <- function(path = "userinfo", start = NULL, end = NULL) {
     )
   }
 
-  structure(
-    list(
-      content = parsed,
-      path = path,
-      response = resp
-    ),
-    class = "ouraring_api"
+  ifelse(isTRUE(verbose),
+         result <- structure(
+           list(
+             content = parsed[[path]],
+             path = path,
+             response = resp
+           ),
+           class = "ouraring_api"
+         ),
+         structure(
+           result <- parsed[[path]],
+           class = "ouraring_api"
+         )
   )
+return(result)
 }
 
 print.ouraring_api <- function(x, ...) {
