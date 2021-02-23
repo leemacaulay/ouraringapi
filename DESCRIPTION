@@ -1,7 +1,7 @@
 Package: ouraringapi
 Type: Package
 Title: Oura Ring API
-Version: 0.1.0
+Version: 0.2.0
 Author: Lee Macaulay <lee@mixmul.com>
 Maintainer: Lee Macaulay <lee@mixmul.com>
 Description: An R package for getting data from the Oura Ring API. 
